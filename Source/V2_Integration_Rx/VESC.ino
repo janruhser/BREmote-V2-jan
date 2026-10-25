@@ -110,7 +110,16 @@ int receiveFromVESC(uint8_t * buf, Stream* interface)
       }
       if(cnt == 2)
       {
-          eom = raw_message[1] + 5; //5 byte overhead
+          //int arithmetic: no 8-bit wrap; vescRelayBuffer (<= raw_message) bounds both copies
+          if(raw_message[1] + 5 > (int)sizeof(vescRelayBuffer))
+          {
+            VESC_DEBUG_PRINTLN("Len NOK");
+            cnt = 0;
+          }
+          else
+          {
+            eom = raw_message[1] + 5; //5 byte overhead
+          }
       }
     }
   }
