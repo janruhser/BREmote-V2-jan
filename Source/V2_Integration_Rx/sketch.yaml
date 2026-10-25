@@ -1,0 +1,21 @@
+# Pinned build profile (bremote-jan fork addition; not part of upstream).
+# Build: arduino-cli compile --profile rx Source/V2_Integration_Rx
+# The Arduino IDE ignores profiles; IDE builds are unaffected.
+#
+# FQBN and core version are read from Ludwig's released binaries
+# (V2.2.8.3_EXP_MULTI Rx, V2.2.7.2 Tx): both embed this FQBN and esp32 core 3.3.0 paths.
+# Library versions follow the comments in BREmote_V2_Rx.h. RadioLib is "current git
+# master" upstream; 7.8.1 is the newest release before Ludwig's latest RX build and the
+# first release line that contains the SX126x fix #1827 his README references.
+profiles:
+  rx:
+    fqbn: esp32:esp32:esp32c3:UploadSpeed=921600,CDCOnBoot=default,CPUFreq=160,FlashFreq=80,FlashMode=qio,FlashSize=4M,PartitionScheme=default,DebugLevel=none,EraseFlash=none,JTAGAdapter=default,ZigbeeMode=default
+    platforms:
+      - platform: esp32:esp32 (3.3.0)
+        platform_index_url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+    libraries:
+      - RadioLib (7.8.1)
+      - Adafruit AW9523 (1.0.5)
+      - Adafruit BusIO (1.17.0)
+      - TinyGPSPlus (1.0.3)
+default_profile: rx
