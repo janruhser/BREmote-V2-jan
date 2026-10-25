@@ -116,6 +116,21 @@ bool readConfFromSPIFFS(confStruct& data) {
         return false;
     }
 
+    if (decodedLen != sizeof(confStruct)) {
+        // Wrong-size record: pass a different stored version on so the caller's version
+        // check halts as before; a same-version record of the wrong size is unreadable.
+        uint16_t storedVersion = 0;
+        bool hasVersion = decodedLen >= sizeof(storedVersion);
+        if (hasVersion) memcpy(&storedVersion, decodedData, sizeof(storedVersion));
+        delete[] decodedData;
+        Serial.println("Config size mismatch");
+        if (hasVersion && storedVersion != SW_VERSION) {
+            data.version = storedVersion;
+            return true;
+        }
+        return false;
+    }
+
     memcpy(&data, decodedData, sizeof(confStruct));
     delete[] decodedData;
     Serial.println("Struct successfully read from SPIFFS");
@@ -193,6 +208,12 @@ bool readBCFromSPIFFS() {
     uint8_t* decodedData = new uint8_t[decodedLen];
     if (mbedtls_base64_decode(decodedData, decodedLen, &decodedLen, (const uint8_t*)encodedString.c_str(), encodedString.length()) != 0) {
         Serial.println("Base64 decoding failed");
+        delete[] decodedData;
+        return false;
+    }
+
+    if (decodedLen != 1 + sizeof(bc_arr)) {
+        Serial.println("Batconf size mismatch");
         delete[] decodedData;
         return false;
     }
