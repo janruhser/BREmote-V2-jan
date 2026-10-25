@@ -93,9 +93,9 @@ void updateDisplay()
   //but the connection is not 1:1
   //See the row_mapper[] and col_mapper[] arrays
 
-  uint8_t sendBuffer[15];
+  uint8_t sendBuffer[17];
 
-  for(int i=0; i < 15; i++)
+  for(int i=0; i < 17; i++)
   {
     sendBuffer[i] = 0x00;
   }
