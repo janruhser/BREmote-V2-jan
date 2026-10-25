@@ -104,6 +104,11 @@ void loop()
         {
           displayDigits(telemetry.foil_speed/10,telemetry.foil_speed-10*(telemetry.foil_speed/10));
         }
+        else if(telemetry.foil_temp != 0xFF)
+        {
+          uint8_t temp = constrain(telemetry.foil_temp,0,99);
+          displayDigits(temp/10,temp-10*(temp/10));
+        }
         else
         {
           displayDigits(DASH, DASH);
